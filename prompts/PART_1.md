@@ -18,8 +18,8 @@
 ### 1. Create a working folder structure and initialise Git
 
 ```sh
-mkdir -p ~/projects/ai-course/module1/{prompts,config-service}
-cd ~/projects/ai-course/module1
+mkdir -p ~/projects/ai-course/{prompts,config-service}
+cd ~/projects/ai-course
 touch JOURNAL.md
 git init .
 ```
@@ -88,7 +88,7 @@ d. Save, stage, and commit all of your changes before moving on to the next step
 ## 5. Execute the implementation plan
 
 a. You know the drill ... start with a journal entry:
-- Prompt:  Please create a Config API Service in the `config-service` folder, according to the Implementation Plan defined in @/prompts/3-create-web-api-plan.md
+- Prompt:  Please create a Config API Service in the `config-service` folder, according to the Implementation Plan defined in @/prompts/3-implementation-plan.md
 - Mode: Act
 - Context: Clean
 - Model: Claude Sonnet 4
@@ -107,7 +107,7 @@ e. Save, stage, and commit all of your changes before moving on to the next step
 
 a. You can iterate from any of the earlier steps. You don't need to start all over with the specs. You can edit the prompt or the plan and generate assets in the subsequent steps.
 
-If you would like to try a different set of specs, check out `module1/practice/examples/1-web-api-specs.md`.
+If you would like to try a different set of specs, check out `prompts/1-web-api-specs.md`.
 
 b. Be sure to commit your experiments. It can be helpful to compare previous experiments. And with all of your experiments captured, you can have your assistant compare differences.
 

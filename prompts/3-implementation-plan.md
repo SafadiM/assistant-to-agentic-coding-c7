@@ -3,7 +3,7 @@
 ## 1. Project Directory & File Structure
 
 ```
-config-api/
+config-service/
 ├── src/
 │   ├── entities/
 │   │   └── Config.ts                 # TypeORM entity for the configs table
