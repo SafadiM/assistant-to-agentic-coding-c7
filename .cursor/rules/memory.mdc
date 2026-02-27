@@ -1,0 +1,24 @@
+---
+description: Project context framework — loads memory files for informed decision-making
+alwaysApply: true
+---
+
+# Context Framework
+
+This project maintains a set of context documents in `memory/` that capture key decisions, standards, and architecture. Read these files at the start of any planning or implementation task to ensure responses are grounded in project reality.
+
+## Memory Files
+
+| File | Purpose | When to read |
+|------|---------|--------------|
+| `memory/ABOUT.md` | Project vision, objectives, and guiding principles | Planning, scoping, prioritization |
+| `memory/ARCHITECTURE.md` | Tech stack, project structure, API surface, database schema | Design decisions, new features, structural changes |
+| `memory/TECHNICAL.md` | Naming conventions, coding patterns, error handling, linting/formatting | Writing or reviewing code |
+| `memory/TESTING.md` | Test tooling, structure, mocking strategies, known gaps | Writing or reviewing tests |
+| `memory/SETUP.md` | Prerequisites, database setup, how to run the app | Environment or setup questions |
+
+## How to use
+
+- Before planning or making changes, read the relevant memory files listed above.
+- When the user asks you to "update memory" or "remember this", update the appropriate memory file with the new information.
+- Prefer precise, actionable content over verbose descriptions when updating memory files.
