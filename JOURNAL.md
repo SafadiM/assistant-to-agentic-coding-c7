@@ -1,4 +1,5 @@
-## PART 1: Create a prompt from specs
+# Module 1
+### PART 1: Create a prompt from specs
 
 - Prompt: Read @/prompts/1-web-api-specs.md and follow the instructions at the top of the file.
 - Tool: Cursor
@@ -128,3 +129,44 @@ TypeScript type-checking passes cleanly (pnpm typecheck — zero errors). All 25
 
 #### What surprised me about the implementation?
 The plan was detailed enough that the implementation was almost entirely mechanical — there were very few ambiguous decisions to make. The plan specified rendered markup, store interfaces, method signatures, and event contracts, so each component could be written nearly to spec. The only real deviation was the jsdom polyfill, which the plan couldn't have anticipated since it's a test-environment concern rather than an application architecture issue. The degree to which a thorough plan eliminated guesswork in the coding step was the standout takeaway.
+
+# Module 2
+Creating .md files then asking Opus4.6 to create a 'rule' for the project context framework
+Cursor did an amazing job and explained how it will use it. 
+This copy and paste from the output
+
+
+'The rule file is created. Here's what was done:
+Created .cursor/rules/memory.mdc — a Cursor rule with alwaysApply: true that will automatically load into every new conversation. It:
+Describes the context framework — explains that memory/ contains key project decisions and standards
+Lists each memory file with its purpose and when to read it:
+ABOUT.md — project vision and objectives
+ARCHITECTURE.md — tech stack, structure, API, database
+TECHNICAL.md — naming, patterns, error handling, linting
+TESTING.md — test tooling, strategies, known gaps
+SETUP.md — prerequisites and how to run the app
+Instructs the assistant to read the relevant files before planning or coding, and to update them when asked"
+
+and it asked me to verify the work, and how to do it
+"Verifying it works
+To confirm the context is being auto-loaded, start a new conversation (not this one — the rule loads at the start of a conversation) and ask the assistant something like:
+> "Tell me about the goals for this project."
+You should see it read from the memory files and respond with project-specific details from ABOUT.md rather than asking generic questions. The rule will appear in the Cursor rules panel under your project settings as well."
+
+### Client library
+AI Assistant explained why the client library exists
+
+#### Why it exists
+This provides:
+Abstraction — if the API changes (endpoint paths, response shapes), only the library needs updating, not every consumer
+Better DX — typed methods, autocomplete, structured errors instead of parsing raw HTTP responses
+Safety from breaking changes — the library can adapt internally while keeping its public API stable
+How the Admin UI uses it
+Before, the UI had its own api/config-api.ts with inline fetch calls.
+
+### Observability
+Initially planned Datadog, but switched to OpenTelemetry + Jaeger — open-source, no account needed, and matches the exercise instructions. Added auto-instrumentation for Express, pg, and Pino with traces exported to Jaeger running in Docker. Minimal code changes: one new tracer file, one import line in server.ts.
+
+Hit a few issues: port conflicts with local PostgreSQL, and `@opentelemetry/resources` v2 changed its API (`resourceFromAttributes()` instead of `new Resource()`). All resolved quickly.
+
+Updated memory docs (ARCHITECTURE, SETUP, TECHNICAL) to reflect the observability layer.
