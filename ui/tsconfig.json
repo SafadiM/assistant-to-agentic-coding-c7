@@ -4,6 +4,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -11,6 +12,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["src/**/*.ts", "tests/unit/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "tests/unit/**/*.ts", "tests/unit/**/*.tsx"],
   "exclude": ["node_modules", "dist"]
 }

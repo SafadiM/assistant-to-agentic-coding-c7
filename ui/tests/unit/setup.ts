@@ -1,20 +1,7 @@
-class MockCSSStyleSheet {
-  private rules: string[] = [];
-  replaceSync(text: string) {
-    this.rules = [text];
-  }
-  get cssRules() {
-    return this.rules;
-  }
-}
+import "@testing-library/jest-dom/vitest";
+import { cleanup } from "@testing-library/react";
+import { afterEach } from "vitest";
 
-if (typeof globalThis.CSSStyleSheet === "undefined" || !("replaceSync" in CSSStyleSheet.prototype)) {
-  (globalThis as any).CSSStyleSheet = MockCSSStyleSheet;
-}
-
-if (typeof ShadowRoot !== "undefined" && !("adoptedStyleSheets" in ShadowRoot.prototype)) {
-  Object.defineProperty(ShadowRoot.prototype, "adoptedStyleSheets", {
-    get() { return this._adoptedStyleSheets || []; },
-    set(sheets: any[]) { this._adoptedStyleSheets = sheets; },
-  });
-}
+afterEach(() => {
+  cleanup();
+});

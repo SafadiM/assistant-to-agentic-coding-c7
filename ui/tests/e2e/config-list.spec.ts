@@ -1,39 +1,29 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Config List", () => {
-  test("page loads and displays the config table heading", async ({ page }) => {
+  test("page loads and displays the configurations heading", async ({ page }) => {
     await page.goto("/");
-    const heading = page.locator("app-root").locator("config-list");
-    await expect(heading).toBeVisible();
+    await expect(page.locator("text=Configurations")).toBeVisible({ timeout: 5000 });
   });
 
-  test("shows empty state when no configs exist", async ({ page }) => {
+  test("shows empty state or table when loaded", async ({ page }) => {
     await page.goto("/");
 
-    const appRoot = page.locator("app-root");
-    const configList = appRoot.locator("config-list");
-    await expect(configList).toBeVisible();
-
-    const emptyOrTable = configList.locator("css=.empty, table");
+    const emptyOrTable = page.locator(".empty, table");
     await expect(emptyOrTable.first()).toBeVisible({ timeout: 5000 });
   });
 
   test("shows New Config button", async ({ page }) => {
     await page.goto("/");
 
-    const appRoot = page.locator("app-root");
-    const configList = appRoot.locator("config-list");
-    const newBtn = configList.locator("#btn-new");
+    const newBtn = page.locator("text=+ New Config");
     await expect(newBtn).toBeVisible();
-    await expect(newBtn).toHaveText("+ New Config");
   });
 
   test("table has correct column headers when configs exist", async ({ page }) => {
     await page.goto("/");
 
-    const configList = page.locator("app-root").locator("config-list");
-    const table = configList.locator("table");
-
+    const table = page.locator("table");
     const hasTable = await table.isVisible().catch(() => false);
     if (hasTable) {
       const headers = table.locator("th");

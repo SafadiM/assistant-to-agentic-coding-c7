@@ -5,7 +5,7 @@ import {
   createConfig,
   updateConfig,
   deleteConfig,
-} from "../../src/api/config-api.js";
+} from "../../src/api/config-api";
 
 function mockFetch(status: number, body?: unknown) {
   return vi.fn().mockResolvedValue({

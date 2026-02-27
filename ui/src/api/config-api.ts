@@ -1,4 +1,4 @@
-import type { Config, CreateConfigDto, UpdateConfigDto } from "../types/config.js";
+import type { Config, CreateConfigDto, UpdateConfigDto } from "../types/config";
 
 const BASE = "/configs";
 

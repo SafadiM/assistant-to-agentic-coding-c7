@@ -6,67 +6,50 @@ test.describe("Config CRUD flow", () => {
   test("create → read → update → delete lifecycle", async ({ page }) => {
     await page.goto("/");
 
-    const appRoot = page.locator("app-root");
-
     // --- CREATE ---
-    const configList = appRoot.locator("config-list");
-    await expect(configList).toBeVisible({ timeout: 5000 });
-
-    const newBtn = configList.locator("#btn-new");
+    const newBtn = page.locator("text=+ New Config");
+    await expect(newBtn).toBeVisible({ timeout: 5000 });
     await newBtn.click();
 
-    const form = appRoot.locator("config-form");
-    await expect(form).toBeVisible();
-
-    const keyInput = form.locator('input[name="key"]');
-    const valueInput = form.locator('textarea[name="value"]');
+    const keyInput = page.locator('input[name="key"]');
+    const valueInput = page.locator('textarea[name="value"]');
+    await expect(keyInput).toBeVisible();
     await keyInput.fill(uniqueKey);
     await valueInput.fill("test_value");
 
-    const saveBtn = form.locator('button[type="submit"]');
-    await saveBtn.click();
+    await page.locator('button[type="submit"]').click();
 
     // Should navigate back to list
-    const listAfterCreate = appRoot.locator("config-list");
-    await expect(listAfterCreate).toBeVisible({ timeout: 5000 });
+    await expect(page.locator("text=Configurations")).toBeVisible({ timeout: 5000 });
 
     // Verify the new config appears in the table
-    const table = listAfterCreate.locator("table");
+    const table = page.locator("table");
     await expect(table).toBeVisible({ timeout: 5000 });
     const newRow = table.locator(`td:has-text("${uniqueKey}")`);
     await expect(newRow).toBeVisible();
 
     // --- VIEW DETAIL ---
-    const viewBtn = table
-      .locator("tr", { has: page.locator(`td:has-text("${uniqueKey}")`) })
-      .locator(".btn-view");
-    await viewBtn.click();
+    const row = table.locator("tr", { has: page.locator(`td:has-text("${uniqueKey}")`) });
+    await row.locator(".btn-view").click();
 
-    const detail = appRoot.locator("config-detail");
+    const detail = page.locator(".config-detail");
     await expect(detail).toBeVisible();
-    const detailText = detail.locator(`dd:has-text("${uniqueKey}")`);
-    await expect(detailText).toBeVisible();
+    await expect(detail.locator(`dd:has-text("${uniqueKey}")`)).toBeVisible();
 
     // --- EDIT from detail ---
-    const editBtn = detail.locator(".btn-edit");
-    await editBtn.click();
+    await detail.locator(".btn-edit").click();
 
-    const editForm = appRoot.locator("config-form");
-    await expect(editForm).toBeVisible();
-
-    const editValueInput = editForm.locator('textarea[name="value"]');
+    const editValueInput = page.locator('textarea[name="value"]');
+    await expect(editValueInput).toBeVisible();
     await editValueInput.clear();
     await editValueInput.fill("updated_value");
-
-    const editSaveBtn = editForm.locator('button[type="submit"]');
-    await editSaveBtn.click();
+    await page.locator('button[type="submit"]').click();
 
     // Should navigate back to list
-    const listAfterEdit = appRoot.locator("config-list");
-    await expect(listAfterEdit).toBeVisible({ timeout: 5000 });
+    await expect(page.locator("text=Configurations")).toBeVisible({ timeout: 5000 });
 
     // Verify updated value
-    const updatedTable = listAfterEdit.locator("table");
+    const updatedTable = page.locator("table");
     await expect(updatedTable).toBeVisible();
     const updatedCell = updatedTable
       .locator("tr", { has: page.locator(`td:has-text("${uniqueKey}")`) })
@@ -79,11 +62,9 @@ test.describe("Config CRUD flow", () => {
       .locator(".btn-delete");
     await deleteBtn.click();
 
-    const dialog = listAfterEdit.locator("confirm-dialog dialog");
+    const dialog = page.locator("dialog");
     await expect(dialog).toBeVisible();
-
-    const confirmBtn = dialog.locator(".btn-danger");
-    await confirmBtn.click();
+    await dialog.locator(".btn-danger").click();
 
     // Verify the config is removed from the list
     await expect(
