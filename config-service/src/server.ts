@@ -1,3 +1,4 @@
+import "./tracer";
 import "reflect-metadata";
 import { env } from "./config/env";
 import { AppDataSource } from "./config/data-source";

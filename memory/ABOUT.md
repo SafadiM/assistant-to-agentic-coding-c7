@@ -66,6 +66,16 @@ The service is application-type-agnostic. Any client that speaks HTTP and JSON c
   - Allow for environment-specific configurations
   - Facilitate easier scaling and migration
 
+## Client Library
+
+The project includes a standalone TypeScript client library (`config-client`) that wraps the API. Applications consume the client library instead of calling the API directly, providing:
+- A typed, class-based interface (`ConfigClient`) with methods for all CRUD operations
+- Structured error types (`ConfigNotFoundError`, `ConfigConflictError`, `ConfigValidationError`) for precise error handling
+- A layer of abstraction that insulates consumers from breaking API changes
+- Zero runtime dependencies (uses native `fetch`)
+
+The Admin UI is the first consumer of the client library.
+
 ## Administration
 
 The project includes a web-based admin UI that allows administrators to:

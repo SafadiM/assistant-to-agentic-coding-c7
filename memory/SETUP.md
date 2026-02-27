@@ -10,31 +10,33 @@ You need the following installed on your machine:
 | Yarn | `yarn --version` | `npm install -g yarn` |
 | pnpm | `pnpm --version` | `npm install -g pnpm` |
 | PostgreSQL | `psql --version` | See "Database Setup" below |
+| Docker & Docker Compose | `docker compose version` | https://docs.docker.com/get-docker |
 
-## 1. Database Setup
+## 1. Infrastructure (Docker Compose)
 
-You need a PostgreSQL instance running. Either use a local install or Docker.
+PostgreSQL runs locally. Jaeger (for tracing) runs in Docker via the `docker-compose.yml` at the project root.
 
-### Option A: Docker (recommended if you don't have PostgreSQL)
+### PostgreSQL
 
-```sh
-docker run -d --name config-db \
-  -e POSTGRES_USER=postgres \
-  -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=config_api \
-  -p 5432:5432 \
-  postgres
-```
-
-### Option B: Local PostgreSQL
-
-Make sure PostgreSQL is running, then create the database:
+Make sure PostgreSQL is running locally, then create the database if it doesn't exist:
 
 ```sh
 createdb config_api
 ```
 
-**Default credentials:** username `postgres`, password `postgres`, port `5432`. If yours differ, you'll update them in the `.env` file (step 2).
+**Default credentials:** username `postgres`, password `postgres`, port `5432`. If yours differ, update them in the `.env` file (step 2).
+
+### Jaeger (tracing)
+
+From the project root (`ai-course/`):
+
+```sh
+docker compose up -d
+```
+
+This starts:
+- **Jaeger UI** on http://localhost:16686
+- **OTLP HTTP receiver** on port `4318`
 
 ## 2. Backend (config-service)
 
@@ -58,6 +60,9 @@ DB_PORT=5432           # Change if your PostgreSQL runs on a different port
 DB_USERNAME=postgres   # Change to match your database user
 DB_PASSWORD=postgres   # Change to match your database password
 DB_NAME=config_api
+
+# OpenTelemetry (optional — defaults work for local development with Jaeger)
+OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318/v1/traces
 ```
 
 Then run the database migration and start the server:
@@ -74,6 +79,7 @@ yarn dev
 
 ```
 [INFO] ts-node-dev ver. 2.0.0 ...
+OpenTelemetry tracing initialized
 Database connection established
 Server running on port 3000 [development]
 ```
@@ -86,14 +92,28 @@ curl http://localhost:3000/health
 
 Expected response: `{"status":"ok"}`
 
-## 3. Frontend (ui)
+## 3. Client Library (config-client)
+
+```sh
+cd config-client
+
+# Install dependencies
+pnpm install
+
+# Build (compiles TypeScript to dist/)
+pnpm build
+```
+
+The client library must be built before the frontend can use it. The frontend references it via `file:../config-client` in its `package.json`.
+
+## 4. Frontend (ui)
 
 Open a **second terminal**:
 
 ```sh
 cd ui
 
-# Install dependencies
+# Install dependencies (includes config-client)
 pnpm install
 
 # Start the frontend
@@ -130,9 +150,38 @@ Then start the backend again. Same approach for port 5173 if needed.
 
 ### Database connection refused
 
-- Check PostgreSQL is running: `docker ps` (Docker) or `pg_isready` (local)
+- Check PostgreSQL is running: `pg_isready`
 - Verify credentials in `.env` match your database setup
+
+### Traces not appearing in Jaeger
+
+- Check Jaeger is running: `docker compose ps`
+- Verify `OTEL_EXPORTER_OTLP_ENDPOINT` in `.env` points to `http://localhost:4318/v1/traces`
+- See "Viewing Traces in Jaeger" below
+
+## Viewing Traces in Jaeger
+
+1. Make sure Jaeger is running (`docker compose up -d` from the project root)
+2. Make sure the backend is running (`cd config-service && yarn dev`)
+3. Generate some traffic:
+
+```sh
+curl http://localhost:3000/health
+curl http://localhost:3000/configs
+```
+
+4. Open **http://localhost:16686** in your browser
+5. Select **`config-service`** from the **Service** dropdown
+6. Click **Find Traces**
+7. Click any trace to see the full span breakdown (Express request handling, PostgreSQL queries, etc.)
+
+Each trace shows the request lifecycle with timing for every auto-instrumented operation. Pino log entries within a request are tagged with `trace_id` and `span_id` for correlation.
 
 ## Stopping
 
-Press `Ctrl+C` in each terminal to stop the servers.
+Press `Ctrl+C` in each terminal to stop the servers. To stop Jaeger:
+
+```sh
+cd ~/projects/ai-course
+docker compose down
+```

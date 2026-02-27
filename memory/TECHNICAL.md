@@ -28,6 +28,15 @@
 - Always `async/await`, no promise chains
 - Controllers are `async` returning `Promise<void>`
 
+### Observability (OpenTelemetry)
+
+- `src/tracer.ts` initializes the OpenTelemetry `NodeSDK` with auto-instrumentation and an OTLP/HTTP trace exporter
+- Must be the first import in `server.ts` so it patches Express, `pg`, and Pino before they are loaded
+- Auto-instruments: Express (request spans), pg (SQL query spans), Pino (trace ID injection into log entries)
+- File system instrumentation is disabled to reduce noise
+- Traces are exported to Jaeger at `OTEL_EXPORTER_OTLP_ENDPOINT` (defaults to `http://localhost:4318/v1/traces`)
+- Vendor-neutral: swap the exporter to send traces to any OTLP-compatible backend (Grafana, Datadog, AWS X-Ray)
+
 ### Dependency Sharing
 
 - Services accept optional repository in constructor for testability, fall back to `AppDataSource`
@@ -40,6 +49,31 @@
 - `validate(schema)` middleware factory parses `req.body`, replaces with typed result
 - Environment variables also validated with Zod at startup (fail fast)
 
+## Client Library Patterns
+
+### Class-Based API
+
+- `ConfigClient` instantiated with `{ baseUrl, fetch? }` options
+- Methods map 1:1 to API endpoints: `getAll`, `get`, `create`, `update`, `delete`, `healthCheck`
+- Custom `fetch` option allows injecting mocks or alternative implementations
+
+### Error Hierarchy
+
+- `ConfigClientError` — base class with `statusCode` and `body` properties
+- `ConfigNotFoundError` (404) — thrown when a key is not found
+- `ConfigConflictError` (409) — thrown on duplicate key creation
+- `ConfigValidationError` (400) — includes `details` array matching backend Zod format
+- Key extraction from both URL path and request body to produce specific error types
+
+### Lazy Fetch Binding
+
+- `fetch` is resolved via a getter at call time (not captured at construction), so test stubs applied after import work correctly
+
+### ESM Compatibility
+
+- Source imports use `.js` extensions (e.g. `from "./types.js"`) so compiled output resolves correctly under ESM
+- `"type": "module"` in `package.json`
+
 ## Frontend Patterns
 
 ### Component Structure
@@ -47,6 +81,11 @@
 - Functional components with hooks
 - One component per file, co-located CSS file (e.g. `ConfigList.tsx` + `ConfigList.css`)
 - Navigation via callback props (`onNavigate`), not a router
+
+### API Layer
+
+- `api/config-api.ts` delegates to a `ConfigClient` instance from the `config-client` library
+- `types/config.ts` re-exports types from `config-client` (single source of truth)
 
 ### State Management
 
@@ -73,6 +112,10 @@ Both projects use ESLint with TypeScript recommended rules:
 cd config-service && yarn lint      # check
 cd config-service && yarn lint:fix  # auto-fix
 
+# Client Library
+cd config-client && pnpm lint      # check
+cd config-client && pnpm lint:fix  # auto-fix
+
 # Frontend
 cd ui && pnpm lint      # check
 cd ui && pnpm lint:fix  # auto-fix
@@ -85,12 +128,13 @@ Both projects share the same Prettier config:
 
 ```sh
 cd config-service && yarn format
+cd config-client && pnpm format
 cd ui && pnpm format
 ```
 
 ### TypeScript
 
-- Strict mode enabled in both projects
+- Strict mode enabled in all three projects (backend, client library, frontend)
 
 ## HTTP Status Codes
 

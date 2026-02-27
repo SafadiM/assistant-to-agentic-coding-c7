@@ -6,6 +6,7 @@
 |-------|------|----------|
 | Backend unit | Jest | `config-service/tests/unit/` |
 | Backend integration | Jest + Supertest | `config-service/tests/integration/` |
+| Client library unit | Vitest | `config-client/tests/` |
 | Frontend unit | Vitest + React Testing Library | `ui/tests/unit/` |
 | Frontend E2E | Playwright | `ui/tests/e2e/` |
 
@@ -27,8 +28,13 @@
 - Pass mocked repository to service constructor
 - Service logic and `AppError` throwing are NOT mocked
 
+### Client Library Unit Tests
+- Mock `fetch` by injecting a mock via the `fetch` constructor option
+- Tests cover all CRUD methods, health check, and all typed error classes (404, 409, 400, 500)
+- 14 tests covering success paths, error mapping, URL encoding, and key extraction from body
+
 ### Frontend Unit Tests
-- API tests: mock global `fetch` via `vi.stubGlobal`
+- API tests: mock global `fetch` via `vi.stubGlobal` (works because `ConfigClient` resolves `fetch` lazily)
 - Component tests: mock the entire `config-api` module via `vi.mock`
 - React components rendered with `render()` from Testing Library, queried by role/text
 
@@ -47,7 +53,8 @@
 
 - All service methods (success + error cases)
 - All API endpoints (success + error responses)
-- API client functions (fetch calls, error handling)
+- Client library (all CRUD methods, typed errors, edge cases)
+- API client functions (delegation to ConfigClient, error handling)
 - Form component (validation, create/edit modes, submission)
 - Full CRUD lifecycle (E2E)
 
@@ -63,6 +70,9 @@
 ```sh
 # Backend
 cd config-service && yarn test
+
+# Client library
+cd config-client && pnpm test
 
 # Frontend unit
 cd ui && pnpm test

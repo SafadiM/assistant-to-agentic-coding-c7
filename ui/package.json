@@ -17,6 +17,7 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"tests/**/*.{ts,tsx}\""
   },
   "dependencies": {
+    "config-client": "file:../config-client",
     "react": "^19.1",
     "react-dom": "^19.1"
   },
