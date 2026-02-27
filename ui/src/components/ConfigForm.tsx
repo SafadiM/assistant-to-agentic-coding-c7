@@ -1,3 +1,4 @@
+import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { useConfigs } from "../hooks/useConfigs";
 import { useToast } from "../hooks/useToast";
@@ -38,7 +39,7 @@ export function ConfigForm({ mode, configKey, onNavigate }: Props) {
     }
   }, [mode, selectedConfig]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setKeyError("");
     setValueError("");

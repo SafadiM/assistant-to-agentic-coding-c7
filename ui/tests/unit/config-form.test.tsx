@@ -119,7 +119,7 @@ describe("ConfigForm", () => {
       });
       api.getAllConfigs.mockResolvedValue([]);
 
-      const { onNavigate } = renderForm("create");
+      renderForm("create");
       fireEvent.change(screen.getByRole("textbox", { name: /key/i }), {
         target: { value: "new_key" },
       });

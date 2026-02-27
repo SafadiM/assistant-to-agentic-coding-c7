@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { useConfigs } from "../hooks/useConfigs";
 import { useToast } from "../hooks/useToast";
@@ -33,7 +34,7 @@ export function ConfigList({ onNavigate }: Props) {
   const formatValue = (value: unknown) =>
     typeof value === "string" ? value : JSON.stringify(value);
 
-  let body: React.ReactNode;
+  let body: ReactNode;
   if (loading && configs.length === 0) {
     body = <p className="loading">Loading…</p>;
   } else if (configs.length === 0) {
