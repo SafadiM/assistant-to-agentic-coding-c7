@@ -42,36 +42,16 @@ This starts:
 
 ```sh
 cd config-service
-
-# Install dependencies
 yarn install
-
-# Create your environment file from the template
-cp .env.example .env
+cp .env.example .env   # then adjust values for your setup
 ```
 
-Open `.env` and verify/adjust the values for your setup:
-
-```
-PORT=3000              # Change if port 3000 is already in use
-NODE_ENV=development
-DB_HOST=localhost
-DB_PORT=5432           # Change if your PostgreSQL runs on a different port
-DB_USERNAME=postgres   # Change to match your database user
-DB_PASSWORD=postgres   # Change to match your database password
-DB_NAME=config_api
-
-# OpenTelemetry (optional — defaults work for local development with Jaeger)
-OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318/v1/traces
-```
+For the full list of env vars and what they mean, see `memory/ENV_SCRIPTS.md` §2.1.
 
 Then run the database migration and start the server:
 
 ```sh
-# Apply database schema
 yarn migration:run
-
-# Start the backend
 yarn dev
 ```
 

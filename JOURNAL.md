@@ -177,3 +177,43 @@ Initially planned Datadog, but switched to OpenTelemetry + Jaeger — open-sourc
 Hit a few issues: port conflicts with local PostgreSQL, and `@opentelemetry/resources` v2 changed its API (`resourceFromAttributes()` instead of `new Resource()`). All resolved quickly.
 
 Updated memory docs (ARCHITECTURE, SETUP, TECHNICAL) to reflect the observability layer.
+
+# Module 3
+Installed [Superpowers](https://github.com/obra/superpowers)
+Opus 4.6 checked the repository, installed the required, ran commands, verified that the configuration is working.
+
+Superpowers v4.3.1 is now installed and fully configured. Here's what was set up:
+Plugin source cloned to ~/.cursor/plugins/superpowers/
+14 skills registered via symlinks in ~/.cursor/skills/:
+
+Collaboration: brainstorming, writing-plans, executing-plans, subagent-driven-development, dispatching-parallel-agents
+Code Quality: requesting-code-review, receiving-code-review, finishing-a-development-branch
+Testing: test-driven-development
+Debugging: systematic-debugging, verification-before-completion
+Workflow: using-git-worktrees
+Meta: using-superpowers, writing-skills
+
+Global rule created at ~/.cursor/rules/superpowers.mdc (set to alwaysApply: true) -- this ensures every new Cursor Agent session automatically knows about the skills and checks for relevant ones before acting.
+
+Starting a new Cursor Agent session and the skills will activate automatically. Asking it to build something and it will kick off the brainstorming workflow first.
+
+
+memory/WORKFLOW_STATUS.md
+1- Stages: Five stages: Backlog → Ready → In progress → Review / Testing → Done. 
+For each stage the doc specifies:
+• Inputs (what’s required to be in that stage)
+• Outputs (what must be true before leaving it)
+• Transition rules (when and how to move to the next stage)
+
+2- Work item structure: Work items live in changes/ as single files (e.g. changes/001-first_story.md). 
+• Required: Title, Status, Acceptance criteria. 
+• Optional: Description, Tasks checklist, Notes, Started/Completed. Example template is in the doc. Guidance: keep details in the work item and link out instead of duplicating.
+
+3- Acceptance criteria
+Format: bullet list (optionally with checkboxes); each item one testable condition or a short Given/When/Then. Validation: by automated tests where they exist, otherwise by manual check; all criteria must be met before Done.
+
+4- Where status lives
+Status is kept in the work item file (the Status field). This doc only defines the process and structure. Prefer pointing to the active work item file (e.g. in JOURNAL or changes/ACTIVE.md) rather than copying status into other files.
+
+5. Build/test protocol
+Before moving to Review/Testing or Done: run the scripts from memory/ENV_SCRIPTS.md (lint/test) for changed areas and fix failures. Allowing known failures is only acceptable if the limitation and any follow-up are documented.

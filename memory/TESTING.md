@@ -67,16 +67,4 @@
 
 ## Running Tests
 
-```sh
-# Backend
-cd config-service && yarn test
-
-# Client library
-cd config-client && pnpm test
-
-# Frontend unit
-cd ui && pnpm test
-
-# Frontend E2E (requires both servers running)
-cd ui && pnpm test:e2e
-```
+See `memory/ENV_SCRIPTS.md` §3.2–3.4 for all test commands (including watch mode, coverage, and E2E).

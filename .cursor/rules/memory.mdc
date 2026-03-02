@@ -16,6 +16,8 @@ This project maintains a set of context documents in `memory/` that capture key 
 | `memory/TECHNICAL.md` | Naming conventions, coding patterns, error handling, linting/formatting | Writing or reviewing code |
 | `memory/TESTING.md` | Test tooling, structure, mocking strategies, known gaps | Writing or reviewing tests |
 | `memory/SETUP.md` | Prerequisites, database setup, how to run the app | Environment or setup questions |
+| `memory/ENV_SCRIPTS.md` | Environments, env vars (e.g. `.env`), and developer scripts/commands | Setup, running commands, or when to go off-script |
+| `memory/WORKFLOW_STATUS.md` | Process stages, work item structure, acceptance criteria, status location, build/test protocol | Starting work, tracking status, transitioning stages, or defining stories |
 
 ## How to use
 

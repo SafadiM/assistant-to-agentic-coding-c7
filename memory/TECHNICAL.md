@@ -107,30 +107,12 @@ Both projects use ESLint with TypeScript recommended rules:
 - Frontend adds `react-hooks/rules-of-hooks` (error) and `react-hooks/exhaustive-deps` (warn)
 - Backend uses `.eslintrc.json` (legacy format), frontend uses `eslint.config.js` (flat config)
 
-```sh
-# Backend
-cd config-service && yarn lint      # check
-cd config-service && yarn lint:fix  # auto-fix
-
-# Client Library
-cd config-client && pnpm lint      # check
-cd config-client && pnpm lint:fix  # auto-fix
-
-# Frontend
-cd ui && pnpm lint      # check
-cd ui && pnpm lint:fix  # auto-fix
-```
+For lint/format commands, see `memory/ENV_SCRIPTS.md` §3.2–3.4.
 
 ### Formatting (Prettier)
 
 Both projects share the same Prettier config:
 - Double quotes, semicolons, trailing commas, 100 char width, 2-space indent
-
-```sh
-cd config-service && yarn format
-cd config-client && pnpm format
-cd ui && pnpm format
-```
 
 ### TypeScript
 
