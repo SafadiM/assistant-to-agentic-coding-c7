@@ -11,8 +11,11 @@ export class ConfigService {
     this.repository = repository ?? AppDataSource.getRepository(Config);
   }
 
-  async getAll(): Promise<Config[]> {
-    return this.repository.find();
+  async getAll(query?: string): Promise<Config[]> {
+    const configs = await this.repository.find();
+    if (!query) return configs;
+    const q = query.toLowerCase();
+    return configs.filter((c) => c.key.toLowerCase().includes(q));
   }
 
   async getByKey(key: string): Promise<Config> {

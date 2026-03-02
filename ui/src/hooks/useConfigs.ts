@@ -35,10 +35,11 @@ function getSnapshot(): State {
 export function useConfigs() {
   const current = useSyncExternalStore(subscribe, getSnapshot);
 
-  const loadConfigs = useCallback(async () => {
+  const loadConfigs = useCallback(async (query?: string) => {
     setState({ loading: true, error: null });
     try {
-      const configs = await api.getAllConfigs();
+      const options = query ? { q: query } : undefined;
+      const configs = await api.getAllConfigs(options);
       setState({ configs, loading: false });
     } catch (err) {
       setState({ loading: false, error: err instanceof Error ? err.message : String(err) });

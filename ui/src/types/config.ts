@@ -1,1 +1,1 @@
-export type { Config, CreateConfigDto, UpdateConfigDto } from "config-client";
+export type { Config, CreateConfigDto, UpdateConfigDto, GetAllOptions } from "config-client";

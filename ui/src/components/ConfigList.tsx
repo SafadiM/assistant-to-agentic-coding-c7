@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useConfigs } from "../hooks/useConfigs";
 import { useToast } from "../hooks/useToast";
 import { ConfirmDialog } from "./ConfirmDialog";
@@ -16,10 +16,20 @@ export function ConfigList({ onNavigate }: Props) {
   const { configs, loading, loadConfigs, deleteConfig } = useConfigs();
   const { showToast } = useToast();
   const [confirmKey, setConfirmKey] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   useEffect(() => {
     loadConfigs();
   }, [loadConfigs]);
+
+  const handleSearch = (value: string) => {
+    setSearch(value);
+    if (debounceRef.current) window.clearTimeout(debounceRef.current);
+    debounceRef.current = window.setTimeout(() => {
+      loadConfigs(value || undefined);
+    }, 300);
+  };
 
   const handleDelete = async (key: string) => {
     try {
@@ -72,7 +82,16 @@ export function ConfigList({ onNavigate }: Props) {
     <section className="config-list">
       <div className="toolbar">
         <h2>Configurations</h2>
-        <button className="btn-primary" onClick={() => onNavigate({ name: "create" })}>+ New Config</button>
+        <div className="toolbar-actions">
+          <input
+            type="search"
+            className="search-input"
+            placeholder="Filter by key…"
+            value={search}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+          <button className="btn-primary" onClick={() => onNavigate({ name: "create" })}>+ New Config</button>
+        </div>
       </div>
       {body}
       {confirmKey && (

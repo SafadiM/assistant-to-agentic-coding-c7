@@ -18,3 +18,7 @@ export interface UpdateConfigDto {
 export interface HealthStatus {
   status: string;
 }
+
+export interface GetAllOptions {
+  q?: string;
+}

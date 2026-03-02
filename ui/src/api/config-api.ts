@@ -1,12 +1,12 @@
 import { ConfigClient } from "config-client";
-import type { Config, CreateConfigDto, UpdateConfigDto } from "config-client";
+import type { Config, CreateConfigDto, UpdateConfigDto, GetAllOptions } from "config-client";
 
 const client = new ConfigClient({ baseUrl: "" });
 
-export type { Config, CreateConfigDto, UpdateConfigDto };
+export type { Config, CreateConfigDto, UpdateConfigDto, GetAllOptions };
 
-export function getAllConfigs(): Promise<Config[]> {
-  return client.getAll();
+export function getAllConfigs(options?: GetAllOptions): Promise<Config[]> {
+  return client.getAll(options);
 }
 
 export function getConfig(key: string): Promise<Config> {

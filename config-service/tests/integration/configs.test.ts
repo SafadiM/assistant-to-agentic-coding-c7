@@ -82,6 +82,28 @@ describe("GET /configs", () => {
     expect(res.status).toBe(200);
     expect(res.body).toHaveLength(2);
   });
+
+  it("should filter configs by key when q is provided", async () => {
+    await request(app).post("/configs").send({ key: "app.name", value: "MyApp" });
+    await request(app).post("/configs").send({ key: "db.host", value: "localhost" });
+    await request(app).post("/configs").send({ key: "app.version", value: "1.0" });
+
+    const res = await request(app).get("/configs").query({ q: "app" });
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveLength(2);
+    expect(res.body.map((c: { key: string }) => c.key).sort()).toEqual(["app.name", "app.version"]);
+  });
+
+  it("should return all configs when q is empty", async () => {
+    await request(app).post("/configs").send({ key: "x", value: "1" });
+    await request(app).post("/configs").send({ key: "y", value: "2" });
+
+    const res = await request(app).get("/configs").query({ q: "" });
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveLength(2);
+  });
 });
 
 describe("GET /configs/:key", () => {

@@ -19,7 +19,7 @@ describe("ConfigService", () => {
   });
 
   describe("getAll", () => {
-    it("should return all configs", async () => {
+    it("should return all configs when no query is provided", async () => {
       const configs = [
         { id: "1", key: "app.name", value: "MyApp", createdAt: new Date(), updatedAt: new Date() },
       ];
@@ -29,6 +29,42 @@ describe("ConfigService", () => {
 
       expect(result).toEqual(configs);
       expect(mockRepository.find).toHaveBeenCalledTimes(1);
+    });
+
+    it("should filter configs by key when query is provided", async () => {
+      const allConfigs = [
+        { id: "1", key: "app.name", value: "MyApp", createdAt: new Date(), updatedAt: new Date() },
+        { id: "2", key: "db.host", value: "localhost", createdAt: new Date(), updatedAt: new Date() },
+        { id: "3", key: "app.version", value: "1.0", createdAt: new Date(), updatedAt: new Date() },
+      ];
+      mockRepository.find.mockResolvedValue(allConfigs);
+
+      const result = await service.getAll("app");
+
+      expect(result).toEqual([allConfigs[0], allConfigs[2]]);
+    });
+
+    it("should filter case-insensitively", async () => {
+      const allConfigs = [
+        { id: "1", key: "App.Name", value: "MyApp", createdAt: new Date(), updatedAt: new Date() },
+        { id: "2", key: "db.host", value: "localhost", createdAt: new Date(), updatedAt: new Date() },
+      ];
+      mockRepository.find.mockResolvedValue(allConfigs);
+
+      const result = await service.getAll("app");
+
+      expect(result).toEqual([allConfigs[0]]);
+    });
+
+    it("should return all configs when query is empty string", async () => {
+      const configs = [
+        { id: "1", key: "app.name", value: "MyApp", createdAt: new Date(), updatedAt: new Date() },
+      ];
+      mockRepository.find.mockResolvedValue(configs);
+
+      const result = await service.getAll("");
+
+      expect(result).toEqual(configs);
     });
   });
 

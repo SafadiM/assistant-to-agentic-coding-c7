@@ -1,6 +1,6 @@
 export { ConfigClient } from "./config-client.js";
 export type { ConfigClientOptions } from "./config-client.js";
-export type { Config, CreateConfigDto, UpdateConfigDto, HealthStatus } from "./types.js";
+export type { Config, CreateConfigDto, UpdateConfigDto, HealthStatus, GetAllOptions } from "./types.js";
 export {
   ConfigClientError,
   ConfigNotFoundError,

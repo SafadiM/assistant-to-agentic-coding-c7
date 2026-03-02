@@ -59,6 +59,28 @@ describe("ConfigClient", () => {
       );
     });
 
+    it("appends ?q= when options.q is provided", async () => {
+      const fetch = mockFetch(200, []);
+      const client = createClient(fetch);
+
+      await client.getAll({ q: "app" });
+      expect(fetch).toHaveBeenCalledWith(
+        "http://localhost:3000/configs?q=app",
+        expect.any(Object),
+      );
+    });
+
+    it("does not append query string when options.q is empty", async () => {
+      const fetch = mockFetch(200, []);
+      const client = createClient(fetch);
+
+      await client.getAll({ q: "" });
+      expect(fetch).toHaveBeenCalledWith(
+        "http://localhost:3000/configs",
+        expect.any(Object),
+      );
+    });
+
     it("throws ConfigClientError on server error", async () => {
       const fetch = mockFetch(500, "Internal Server Error");
       const client = createClient(fetch);

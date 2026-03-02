@@ -1,4 +1,4 @@
-import type { Config, CreateConfigDto, UpdateConfigDto, HealthStatus } from "./types.js";
+import type { Config, CreateConfigDto, UpdateConfigDto, HealthStatus, GetAllOptions } from "./types.js";
 import {
   ConfigClientError,
   ConfigNotFoundError,
@@ -29,8 +29,9 @@ export class ConfigClient {
     return this.request<HealthStatus>("/health");
   }
 
-  async getAll(): Promise<Config[]> {
-    return this.request<Config[]>("/configs");
+  async getAll(options?: GetAllOptions): Promise<Config[]> {
+    const path = options?.q ? `/configs?q=${encodeURIComponent(options.q)}` : "/configs";
+    return this.request<Config[]>(path);
   }
 
   async get(key: string): Promise<Config> {

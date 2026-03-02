@@ -3,9 +3,10 @@ import { ConfigService } from "../services/config.service";
 
 const configService = new ConfigService();
 
-export async function getAll(_req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const configs = await configService.getAll();
+    const q = typeof req.query.q === "string" ? req.query.q : undefined;
+    const configs = await configService.getAll(q);
     res.json(configs);
   } catch (err) {
     next(err);
