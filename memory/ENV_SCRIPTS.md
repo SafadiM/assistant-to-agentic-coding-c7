@@ -67,8 +67,10 @@ Run from the paths indicated. Backend uses **Yarn**; client library and frontend
 | `yarn migration:run` | Apply pending DB migrations | After pull or after adding migrations |
 | `yarn migration:generate src/migrations/<Name>` | Generate migration from entity changes | After changing entities |
 | `yarn migration:revert` | Roll back last migration | When a migration was wrong |
-| `yarn test` | Run Jest tests | Before commit or on demand |
-| `yarn test:watch` | Run tests in watch mode | During TDD or active development |
+| `yarn test` | Run Jest unit tests | Before commit or on demand |
+| `yarn test:integration` | Run Jest integration tests (requires PostgreSQL + `config_api_test` DB) | Before release or to validate full flows |
+| `yarn test:all` | Run all Jest tests (unit + integration) | When PostgreSQL is available |
+| `yarn test:watch` | Run unit tests in watch mode | During TDD or active development |
 | `yarn lint` | Run ESLint (check) | Before commit |
 | `yarn lint:fix` | ESLint with auto-fix | When fixing lint errors |
 | `yarn format` | Prettier format | Before commit or on demand |

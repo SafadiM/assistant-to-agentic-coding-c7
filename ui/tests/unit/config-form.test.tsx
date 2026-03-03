@@ -106,6 +106,22 @@ describe("ConfigForm", () => {
       const keyInput = screen.getByRole("textbox", { name: /key/i });
       expect(keyInput).toHaveAttribute("readonly");
     });
+
+    it("shows error message with back button when loadConfig fails", async () => {
+      api.getConfig.mockRejectedValue(new Error("Not Found"));
+
+      const { onNavigate } = renderForm("edit", "missing_key");
+
+      await waitFor(() => {
+        expect(screen.getByText(/not found/i)).toBeInTheDocument();
+      });
+
+      const backButton = screen.getByRole("button", { name: /back to list/i });
+      expect(backButton).toBeInTheDocument();
+
+      fireEvent.click(backButton);
+      expect(onNavigate).toHaveBeenCalledWith({ name: "list" });
+    });
   });
 
   describe("form submission", () => {

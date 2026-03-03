@@ -1,33 +1,24 @@
 import "reflect-metadata";
 import request from "supertest";
-import { DataSource } from "typeorm";
 import { Config } from "../../src/entities/Config";
+import { AppDataSource } from "../../src/config/data-source";
 import app from "../../src/app";
 
-let testDataSource: DataSource;
-
 beforeAll(async () => {
-  testDataSource = new DataSource({
-    type: "postgres",
-    host: process.env.DB_HOST || "localhost",
-    port: Number(process.env.DB_PORT) || 5432,
-    username: process.env.DB_USERNAME || "postgres",
-    password: process.env.DB_PASSWORD || "postgres",
-    database: process.env.DB_NAME || "config_api_test",
+  Object.assign(AppDataSource.options, {
     synchronize: true,
     dropSchema: true,
-    entities: [Config],
   });
 
-  await testDataSource.initialize();
+  await AppDataSource.initialize();
 });
 
 afterAll(async () => {
-  await testDataSource.destroy();
+  await AppDataSource.destroy();
 });
 
 beforeEach(async () => {
-  await testDataSource.getRepository(Config).clear();
+  await AppDataSource.getRepository(Config).clear();
 });
 
 describe("GET /health", () => {

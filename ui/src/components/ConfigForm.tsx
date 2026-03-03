@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function ConfigForm({ mode, configKey, onNavigate }: Props) {
-  const { selectedConfig, loadConfig, createConfig, updateConfig } = useConfigs();
+  const { selectedConfig, loading, error, loadConfig, createConfig, updateConfig } = useConfigs();
   const { showToast } = useToast();
 
   const [key, setKey] = useState("");
@@ -38,6 +38,17 @@ export function ConfigForm({ mode, configKey, onNavigate }: Props) {
       );
     }
   }, [mode, selectedConfig]);
+
+  if (mode === "edit" && !loading && error) {
+    return (
+      <div className="error-state">
+        <p>{error}</p>
+        <button className="btn-back" onClick={() => onNavigate({ name: "list" })}>
+          ← Back to list
+        </button>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();

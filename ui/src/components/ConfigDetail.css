@@ -1,3 +1,34 @@
+.error-state {
+  background: var(--color-error-bg);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.error-state p {
+  color: var(--color-danger);
+  font-size: var(--font-size-base);
+  margin: 0 0 var(--spacing-lg);
+}
+
+.error-state .btn-back {
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: background-color 0.15s;
+}
+
+.error-state .btn-back:hover {
+  background: var(--color-hover-row);
+}
+
 .config-detail {
   background: var(--color-surface);
   border-radius: var(--radius-md);

@@ -10,7 +10,7 @@ interface Props {
 }
 
 export function ConfigDetail({ configKey, onNavigate }: Props) {
-  const { selectedConfig, loading, loadConfig } = useConfigs();
+  const { selectedConfig, loading, error, loadConfig } = useConfigs();
 
   useEffect(() => {
     loadConfig(configKey);
@@ -20,8 +20,15 @@ export function ConfigDetail({ configKey, onNavigate }: Props) {
     return <p className="loading">Loading…</p>;
   }
 
-  if (!selectedConfig) {
-    return <p className="loading">Config not found.</p>;
+  if (error || !selectedConfig) {
+    return (
+      <div className="error-state">
+        <p>{error ?? "Config not found."}</p>
+        <button className="btn-back" onClick={() => onNavigate({ name: "list" })}>
+          ← Back to list
+        </button>
+      </div>
+    );
   }
 
   const c = selectedConfig;
